@@ -177,4 +177,24 @@ public class LinkedList {
         cur.next = null;
     }
 
+    /**
+     * Delete a node (not first or last) given a pointer to that node
+     * 
+     * @param node to be deleted
+     * 
+     *             Time complexity : O(n) Space complexity : O(1)
+     */
+    public static void deleteNonExtremeNode(ListNode node) {
+        ListNode prev = node;
+        ListNode cur = node;
+
+        while (cur.next != null) {
+            cur.val = cur.next.val;
+            prev = cur;
+            cur = cur.next;
+        }
+
+        prev.next = null;
+    }
+
 }

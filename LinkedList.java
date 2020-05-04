@@ -232,7 +232,7 @@ public class LinkedList {
      * 
      *         Time complexity : O(1) Space complexity : O(1)
      */
-    public static ListNode cInsertIntoSortedCircularList(ListNode head, int insertVal) {
+    public static ListNode insertIntoSortedCircularList(ListNode head, int insertVal) {
         if (head == null) {
             ListNode node = new ListNode(insertVal);
             node.next = node;
@@ -254,6 +254,88 @@ public class LinkedList {
             insertAfter(prev, insertVal);
             return head;
         }
+    }
+
+    /**
+     * Delete the k-th last node in singly linked list
+     * 
+     * @param head of the linked list
+     * @param k
+     * @return the head of the linked list
+     * 
+     *         Time complexity : O(n) Space complexity : O(1)
+     */
+    public static ListNode deleteKthToLast(ListNode head, int k) {
+        ListNode nodeBeforeKthLastNode = getNodeBeforeKthLastNode(head, k);
+        head = deleteNode(nodeBeforeKthLastNode, head);
+        return head;
+    }
+
+    /**
+     * Get the node before the k-th last node
+     * 
+     * @param head of the linked list
+     * @param k
+     * @return node before the k-th last node
+     * 
+     *         Time complexity : O(n) Space complexity : O(1)
+     */
+    public static ListNode getNodeBeforeKthLastNode(ListNode head, int k) {
+        ListNode slow = null, fast = null;
+
+        fast = getKthNode(head, k);
+
+        while (fast.next != null) {
+            fast = fast.next;
+            if (slow == null) {
+                slow = head;
+            } else {
+                slow = slow.next;
+            }
+        }
+
+        return slow;
+    }
+
+    /**
+     * Get the k-th node
+     * 
+     * @param head of the linked list
+     * @param k
+     * @return the k-th node
+     * 
+     *         Time complexity : O(n) Space complexity : O(1)
+     */
+    public static ListNode getKthNode(ListNode head, int k) {
+        ListNode node = null;
+        for (int i = 1; i <= k; i++) {
+            if (node == null) {
+                node = head;
+            } else {
+                node = node.next;
+            }
+        }
+        return node;
+    }
+
+    /**
+     * Delete the node after the given node
+     * 
+     * @param node before the node to be deleted
+     * @param head of the linked list
+     * @return the head of the linked list after deleting the node
+     * 
+     *         Note : 1. If you want to delete the head, pass in null for node
+     * 
+     *         Time complexity : O(1) Space complexity : O(1)
+     */
+    public static ListNode deleteNode(ListNode node, ListNode head) {
+        if (node == null) {
+            head = head.next;
+        } else if (node.next != null) {
+            node.next = node.next.next;
+        }
+        return head;
     }
 
 }

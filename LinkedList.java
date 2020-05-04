@@ -164,7 +164,6 @@ public class LinkedList {
      * @param loopStart first node of the loop
      * 
      *                  Time complexity : O(n) Space complexity : O(1)
-     * 
      */
     public static void breakLoop(ListNode head, ListNode loopStart) {
         if (head == null || loopStart == null) {
@@ -187,6 +186,74 @@ public class LinkedList {
     public static void deleteNonExtremeNode(ListNode node) {
         node.val = node.next.val;
         node.next = node.next.next;
+    }
+
+    /**
+     * Insert a node after a given node
+     * 
+     * @param node      after which a new node is to be inserted
+     * @param insertVal value to insert after node
+     * 
+     *                  Time complexity : O(1) Space complexity : O(1)
+     */
+    public static void insertAfter(ListNode node, int insertVal) {
+        if (node == null) {
+            System.out.println("insertAfter : node is null");
+            return;
+        }
+        ListNode newNode = new ListNode(insertVal);
+        newNode.next = node.next;
+        node.next = newNode;
+    }
+
+    /**
+     * Check if a given val is in range of 2 nodes in a sorted list
+     * 
+     * @param a   first node
+     * @param val to check for
+     * @param b   second node
+     * @return true if val is in range of node a and node b
+     * 
+     *         Time complexity : O(1) Space complexity : O(1)
+     */
+    public static boolean isInRange(ListNode a, int val, ListNode b) {
+        if (a == null || b == null) {
+            return false;
+        }
+        return (a.val <= val && val <= b.val);
+    }
+
+    /**
+     * Insert a value into a sorted circular linked list and keep the order
+     * 
+     * @param head      any node in a circular linked list
+     * @param insertVal value to be inserted
+     * @return head
+     * 
+     *         Time complexity : O(1) Space complexity : O(1)
+     */
+    public static ListNode cInsertIntoSortedCircularList(ListNode head, int insertVal) {
+        if (head == null) {
+            ListNode node = new ListNode(insertVal);
+            node.next = node;
+            return node;
+        } else {
+            ListNode prev = head;
+            ListNode next = head.next;
+
+            while (next != head) {
+                if (isInRange(prev, insertVal, next)
+                        || (prev.val > next.val && (insertVal >= prev.val || insertVal <= next.val))) {
+                    insertAfter(prev, insertVal);
+                    return head;
+                } else {
+                    prev = prev.next;
+                    next = next.next;
+                }
+            }
+            insertAfter(prev, insertVal);
+            return head;
+        }
     }
 
 }

@@ -399,7 +399,7 @@ public class LinkedList {
      * 
      *         Time complexity : O(m + n) Space complexity : O
      */
-    public static ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+    public static ListNode mergeTwoSortedLists(ListNode l1, ListNode l2) {
         ListNode[] result = new ListNode[] { null, null };
         ListNode[] parts;
         while (l1 != null && l2 != null) {
@@ -421,6 +421,84 @@ public class LinkedList {
         }
 
         return result[0];
+    }
+
+    /**
+     * Get the mid node (2nd mid node if even number of nodes)
+     * 
+     * @param head of the linked list
+     * @return the mid node
+     * 
+     *         Time complexity : O(n) Space complexity : O(1)
+     */
+    public ListNode getMidNode(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        ListNode slow = head;
+        ListNode fast = head;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        return slow;
+    }
+
+    /**
+     * Get the node before the mid node (2nd mid node if even number of nodes)
+     * 
+     * @param head of the linked list
+     * @return node before the mid node
+     * 
+     *         Time complexity : O(n) Space complexity : O(1)
+     */
+    public ListNode getNodeBeforeMidNode(ListNode head) {
+        if (head == null || head.next == null) {
+            return null;
+        }
+        ListNode slow = head;
+        ListNode fast = head;
+        ListNode prev = null;
+        while (fast != null && fast.next != null) {
+            prev = slow;
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        return prev;
+    }
+
+    /**
+     * Move the mid node to the head of the list
+     * 
+     * @param head of the linked list
+     * @return new list with the mid node at the head
+     * 
+     *         Time complexity : O(n) Space complexity : O(1)
+     */
+    public ListNode moveMiddleToHead(ListNode head) {
+
+        if (head == null || head.next == null) {
+            return head;
+        }
+
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+
+        // 1. Get the node before the mid node
+        ListNode prevOfMid = getNodeBeforeMidNode(head);
+        ListNode mid = prevOfMid.next;
+
+        // 2. Remove mid from list
+        prevOfMid.next = mid.next;
+
+        // 3. Make mid node's next point to the head of the list
+        mid.next = head;
+
+        // 4. Update the new head to the mid node
+        dummy.next = mid;
+
+        return dummy.next;
+
     }
 
 }

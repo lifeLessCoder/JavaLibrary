@@ -265,7 +265,9 @@ public class LinkedList {
      * 
      *         Time complexity : O(n) Space complexity : O(1)
      */
-    public static ListNode deleteKthToLast(ListNode head, int k) {
+    public static ListNode deleteKth
+
+    LastNode(ListNode head, int k) {
         ListNode nodeBeforeKthLastNode = getNodeBeforeKthLastNode(head, k);
         head = deleteNode(nodeBeforeKthLastNode, head);
         return head;
@@ -336,6 +338,41 @@ public class LinkedList {
             node.next = node.next.next;
         }
         return head;
+    }
+
+    /**
+     * Remove all elements which appear more than once in a sorted linked list
+     * 
+     * @param head of the linked list
+     * @return head of the linked list after removal of duplicates
+     * 
+     *         Time complexity : O(n) Space complexity : O(1)
+     */
+    public static ListNode removeDuplicatesFromList(ListNode head) {
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+        ListNode prev = dummy;
+        ListNode cur = head;
+
+        while (cur != null) {
+
+            // Skip duplicates if they exist
+            while (cur.next != null && cur.next.val == cur.val) {
+                cur = cur.next;
+            }
+
+            if (prev.next == cur) {
+                // No duplicates
+                prev = cur;
+            } else {
+                // Duplicates
+                prev.next = cur.next;
+            }
+
+            cur = cur.next;
+        }
+
+        return dummy.next;
     }
 
 }

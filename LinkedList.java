@@ -353,14 +353,11 @@ public class LinkedList {
         dummy.next = head;
         ListNode prev = dummy;
         ListNode cur = head;
-
         while (cur != null) {
-
             // Skip duplicates if they exist
             while (cur.next != null && cur.next.val == cur.val) {
                 cur = cur.next;
             }
-
             if (prev.next == cur) {
                 // No duplicates
                 prev = cur;
@@ -368,11 +365,62 @@ public class LinkedList {
                 // Duplicates
                 prev.next = cur.next;
             }
-
             cur = cur.next;
         }
-
         return dummy.next;
+    }
+
+    /**
+     * Split given list into 2 parts where 1st part is the 1st node and second part
+     * is the remaining list
+     * 
+     * @param head of the linked list
+     * @return [firstNode, head of the remaining linked list]
+     * 
+     *         Time complexity : O(1) Space complexity : O(1)
+     */
+    public static ListNode[] extractFirstNode(ListNode head) {
+        if (head == null) {
+            return new ListNode[] { null, null };
+        }
+        ListNode firstNode = head;
+        ListNode remaining = head.next;
+        // Disconnect
+        firstNode.next = null;
+        return new ListNode[] { firstNode, remaining };
+    }
+
+    /**
+     * Given 2 sorted lists merge them into a sorted list
+     * 
+     * @param l1 head of list 1 of size m
+     * @param l2 head of list 2 of size n
+     * @return head of sorted merged list
+     * 
+     *         Time complexity : O(m + n) Space complexity : O
+     */
+    public static ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        ListNode[] result = new ListNode[] { null, null };
+        ListNode[] parts;
+        while (l1 != null && l2 != null) {
+            if (l1.val < l2.val) {
+                parts = extractFirstNode(l1);
+                appendNodeToResult(result, parts[0]);
+                l1 = parts[1];
+            } else {
+                parts = extractFirstNode(l2);
+                appendNodeToResult(result, parts[0]);
+                l2 = parts[1];
+            }
+        }
+
+        if (l1 != null) {
+            appendNodeToResult(result, l1);
+        } else if (l2 != null) {
+            appendNodeToResult(result, l2);
+        }
+
+        return result[0];
     }
 
 }

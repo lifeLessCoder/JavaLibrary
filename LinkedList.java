@@ -501,4 +501,78 @@ public class LinkedList {
 
     }
 
+    /**
+     * Get the number of nodes in the linked list
+     * 
+     * @param head of the list with n nodes
+     * @return num of nodes n
+     * 
+     *         Time complexity : O(n) Space complexity : O(1)
+     */
+    public static int getNumOfNodes(ListNode head) {
+        int numOfNodes = 0;
+        for (ListNode cur = head; cur != null; cur = cur.next) {
+            numOfNodes++;
+        }
+        return numOfNodes;
+    }
+
+    /**
+     * Skip nodes in a linked list
+     * 
+     * @param head of the linked list
+     * @param k    nodes to skip
+     * @return the (k+1)th node
+     * 
+     *         Time complexity : O(k) Space complexity : O(1)
+     */
+    public static ListNode skipNodes(ListNode head, int k) {
+        for (int i = 0; i < k && head != null; i++) {
+            head = head.next;
+        }
+        return head;
+    }
+
+    /**
+     * Return the intersection point of 2 lists of equal lengths
+     * 
+     * @param firstPtr  first list of length n
+     * @param secondPtr second list of length n
+     * @return intersection point if exists else null
+     * 
+     *         Time complexity : O(n) Space complexity : O(1)
+     */
+    public static ListNode getIntersectionPoint(ListNode firstPtr, ListNode secondPtr) {
+        while (firstPtr != null && secondPtr != null && firstPtr != secondPtr) {
+            firstPtr = firstPtr.next;
+            secondPtr = secondPtr.next;
+        }
+        return firstPtr;
+    }
+
+    /**
+     * Return the intersection point of 2 lists of unequal/equal lengths
+     * 
+     * @param head1 first list of length m
+     * @param head2 second list of length n
+     * @return intersection node if exists else null
+     * 
+     *         Time complexity : O(m+n) Space complexity : O(1)
+     */
+    public static ListNode listIntersectionPoint(ListNode head1, ListNode head2) {
+        int numOfNodesList1 = getNumOfNodes(head1);
+        int numOfNodesList2 = getNumOfNodes(head2);
+        int differenceInNumOfNodes = Math.abs(numOfNodesList1 - numOfNodesList2);
+
+        ListNode firstPtr = head1;
+        ListNode secondPtr = head2;
+
+        if (numOfNodesList1 > numOfNodesList2) {
+            firstPtr = skipNodes(head1, differenceInNumOfNodes);
+        } else if (numOfNodesList2 > numOfNodesList1) {
+            secondPtr = skipNodes(head2, differenceInNumOfNodes);
+        }
+
+        return getIntersectionPoint(firstPtr, secondPtr);
+    }
 }

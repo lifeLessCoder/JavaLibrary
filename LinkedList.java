@@ -22,6 +22,9 @@ public class LinkedList {
      *         Time complexity : O(n) Space complexity : O(1)
      */
     public static ListNode[] reverseLinkedList(ListNode head) {
+        if (head == null) {
+            return null;
+        }
         ListNode prev = null;
         ListNode cur = head;
         ListNode next = null;
@@ -265,9 +268,7 @@ public class LinkedList {
      * 
      *         Time complexity : O(n) Space complexity : O(1)
      */
-    public static ListNode deleteKth
-
-    LastNode(ListNode head, int k) {
+    public static ListNode deleteKthLastNode(ListNode head, int k) {
         ListNode nodeBeforeKthLastNode = getNodeBeforeKthLastNode(head, k);
         head = deleteNode(nodeBeforeKthLastNode, head);
         return head;
@@ -397,7 +398,7 @@ public class LinkedList {
      * @param l2 head of list 2 of size n
      * @return head of sorted merged list
      * 
-     *         Time complexity : O(m + n) Space complexity : O
+     *         Time complexity : O(m + n) Space complexity : O(1)
      */
     public static ListNode mergeTwoSortedLists(ListNode l1, ListNode l2) {
         ListNode[] result = new ListNode[] { null, null };
@@ -452,7 +453,7 @@ public class LinkedList {
      * 
      *         Time complexity : O(n) Space complexity : O(1)
      */
-    public ListNode getNodeBeforeMidNode(ListNode head) {
+    public static ListNode getNodeBeforeMidNode(ListNode head) {
         if (head == null || head.next == null) {
             return null;
         }
@@ -559,7 +560,7 @@ public class LinkedList {
      * 
      *         Time complexity : O(m+n) Space complexity : O(1)
      */
-    public static ListNode listIntersectionPoint(ListNode head1, ListNode head2) {
+    public static ListNode getIntersectionOfTwoLists(ListNode head1, ListNode head2) {
         int numOfNodesList1 = getNumOfNodes(head1);
         int numOfNodesList2 = getNumOfNodes(head2);
         int differenceInNumOfNodes = Math.abs(numOfNodesList1 - numOfNodesList2);
@@ -574,5 +575,136 @@ public class LinkedList {
         }
 
         return getIntersectionPoint(firstPtr, secondPtr);
+    }
+
+    /**
+     * Extract the list
+     * 
+     * @param nodeBeforeHead
+     * @param tail
+     * @return the head and tail after extracting list
+     * 
+     *         Time complexity : O(1) Space complexity : O(1)
+     */
+    public static ListNode[] extractList(ListNode nodeBeforeHead, ListNode tail) {
+        if (nodeBeforeHead == null || tail == null) {
+            return null;
+        }
+        ListNode head = nodeBeforeHead.next;
+        nodeBeforeHead.next = null;
+        tail.next = null;
+        return new ListNode[] { head, tail };
+    }
+
+    /**
+     * Stitch sublist into another list
+     * 
+     * @param nodeBeforeHead first end of the list to be stitched into
+     * @param list           head and tail of the list to be stitched
+     * @param nodeAfterTail  second end of the list to be stitched into
+     * 
+     *                       Example : Input : 1->2->3 4->5->6 7->8->9
+     * 
+     *                       Output : 1->2->3->4->5->6->7->8->9
+     *
+     *                       Time complexity : O(1) Space complexity : O(1)
+     */
+    public static void stitchSublist(ListNode nodeBeforeHead, ListNode[] list, ListNode nodeAfterTail) {
+        if (nodeBeforeHead == null || list == null || list[0] == null || list[1] == null) {
+            return;
+        }
+        nodeBeforeHead.next = list[0];
+        list[1].next = nodeAfterTail;
+    }
+
+    /**
+     * Reverse contiguous even elements
+     * 
+     * @param head of list of length n
+     * @return head after reversing contiguous even elements
+     * 
+     *         Time complexity : O(n) Space complexity : O(1)
+     */
+    public static ListNode reverseEvenElements(ListNode head) {
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+
+        // Prev points to the part of the list upto which nodes are reversed
+        ListNode prev = dummy;
+        ListNode cur = head;
+        ListNode prevOfCur = dummy;
+
+        while (cur != null) {
+            while (cur != null && cur.val % 2 == 0) {
+                prevOfCur = cur;
+                cur = cur.next;
+            }
+
+            if (prev.next != cur && prev.next.next != cur) {
+                // At least 2 contiguous even elements
+                ListNode[] extractedList = extractList(prev, prevOfCur);
+                extractedList = reverseLinkedList(extractedList[0]);
+                stitchSublist(prev, extractedList, cur);
+            }
+
+            prev = cur;
+            if (cur != null) {
+                cur = cur.next;
+            }
+        }
+
+        return dummy.next;
+    }
+
+    /**
+     * Sort a linked list
+     * 
+     * @param head of linked list
+     * @return head of the sorted list
+     * 
+     *         Time complexity : O(nlogn) Space complexity : O(logn)
+     */
+    public static ListNode mergeSort(ListNode head) {
+        // Base case : if single or null node return it
+        if (head == null || head.next == null) {
+            return head;
+        }
+
+        // General case
+
+        // 1. Divide list into 2 halves
+        ListNode[] halves = splitListToHalves(head);
+
+        // 2. Sort both the halves
+        halves[0] = mergeSort(halves[0]);
+        halves[1] = mergeSort(halves[1]);
+
+        // 3. Merge the sorted halves
+        return mergeTwoSortedLists(halves[0], halves[1]);
+    }
+
+    /**
+     * Split list to 2 equal parts
+     * 
+     * @param head of the linked list of size n
+     * @return heads of the 2 parts
+     * 
+     *         Time complexity : O(n) Space complexity : O(1)
+     */
+    public static ListNode[] splitListToHalves(ListNode head) {
+        if (head == null || head.next == null) {
+            return null;
+        }
+
+        // Get the node before mid node
+        ListNode nodeBeforeMid = getNodeBeforeMidNode(head);
+
+        // Second list starts at mid
+        ListNode head2 = nodeBeforeMid.next;
+
+        // Split the list into 2 equal parts
+        nodeBeforeMid.next = null;
+
+        return new ListNode[] { head, head2 };
     }
 }

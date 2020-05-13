@@ -13,6 +13,22 @@ public class LinkedList {
         }
     }
 
+    public static class DoublyLinkedListNode {
+        int val;
+        DoublyLinkedListNode prev, next;
+
+        public DoublyLinkedListNode(int val) {
+            this.val = val;
+        }
+
+        public DoublyLinkedListNode(int val, DoublyLinkedListNode prev, DoublyLinkedListNode next) {
+            this.val = val;
+            this.prev = prev;
+            this.next = next;
+        }
+
+    }
+
     /**
      * Reverse the given linked list
      * 
@@ -102,19 +118,18 @@ public class LinkedList {
     /**
      * Append given list to result list
      * 
-     * @param result list
-     * @param head   of the given list
-     * @param tail   of the given list
+     * @param result  [head of result, tail of result]
+     * @param newList [head of newList, tail of newList]
      * 
-     *               Time complexity : O(1) Space complexity : O(1)
+     *                Time complexity : O(1) Space complexity : O(1)
      */
-    public static void appendListToResult(ListNode[] result, ListNode head, ListNode tail) {
+    public static void appendListToResult(ListNode[] result, ListNode[] newList) {
         if (result[0] == null) {
-            result[0] = head;
-            result[1] = tail;
-        } else if (head != null) {
-            result[1].next = head;
-            result[1] = tail;
+            result[0] = newList[0];
+            result[1] = newList[1];
+        } else if (newList[0] != null) {
+            result[1].next = newList[0];
+            result[1] = newList[1];
         }
     }
 
@@ -706,5 +721,68 @@ public class LinkedList {
         nodeBeforeMid.next = null;
 
         return new ListNode[] { head, head2 };
+    }
+
+    /**
+     * Convert a singly linked list to doubly linked circular list
+     * 
+     * @param head of the singly linked list of size n
+     * @return head of the doubly linked circular list
+     * 
+     *         Time complexity : O(n) Space complexity : O(n)
+     */
+    public static DoublyLinkedListNode doublyLinkedCircularList(ListNode head) {
+
+        if (head == null) {
+            return null;
+        }
+
+        // 1. Convert the singly linked list to doubly linked list
+        DoublyLinkedListNode[] doublyLinkedList = convertSinglyToDoublyLinkedList(head);
+
+        // 2. Connect the first and the last nodes of the doubly linked list
+        doublyLinkedList[0].prev = doublyLinkedList[1];
+        doublyLinkedList[1].next = doublyLinkedList[0];
+
+        return doublyLinkedList[0];
+    }
+
+    /**
+     * Convert singly linked list to doubly linked list
+     * 
+     * @param head of the singly linked list of size n
+     * @return head of the doubly linked list
+     * 
+     *         Time complexity : O(n) Space complexity : O(n)
+     */
+    public static DoublyLinkedListNode[] convertSinglyToDoublyLinkedList(ListNode head) {
+        if (head == null) {
+            return null;
+        }
+
+        if (head.next == null) {
+            DoublyLinkedListNode node = new DoublyLinkedListNode(head.val, null, null);
+            return new DoublyLinkedListNode[] { node, node };
+        }
+
+        DoublyLinkedListNode doubleHead = new DoublyLinkedListNode(head.val, null, null);
+        DoublyLinkedListNode doublePrev = null;
+        DoublyLinkedListNode doubleNext = null;
+        DoublyLinkedListNode doubleCur = doubleHead;
+        ListNode singleCur = head.next;
+
+        while (singleCur != null) {
+            doubleNext = new DoublyLinkedListNode(singleCur.val, null, null);
+            doubleCur.prev = doublePrev;
+            doubleCur.next = doubleNext;
+
+            doublePrev = doubleCur;
+            doubleCur = doubleNext;
+            singleCur = singleCur.next;
+        }
+
+        doubleCur.prev = doublePrev;
+
+        return new DoublyLinkedListNode[] { doubleHead, doubleCur };
     }
 }
